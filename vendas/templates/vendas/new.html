@@ -1,0 +1,13 @@
+{% extends 'vendas/base.html' %}
+
+{% block titulo %}Adicionar Produto{% endblock %}
+
+{% block conteudo %}
+    <h2>Adicionar Produto</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salvar</button>
+    </form>
+{% endblock %}
