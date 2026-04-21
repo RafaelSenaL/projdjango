@@ -1,0 +1,14 @@
+{% extends 'vendas/base.html' %}
+
+{% block titulo %}Editar {{ product.nome }}{% endblock %}
+
+{% block conteudo %}
+    <h1>Editar {{ product.nome }}</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salvar</button>
+        <a href="/product/{{ product.id }}/">Cancelar</a>
+    </form>
+{% endblock %}

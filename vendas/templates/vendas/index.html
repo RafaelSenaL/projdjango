@@ -6,7 +6,10 @@
     <h1>Produtos em Destaque</h1>
     <ul>
         {% for product in product %}
-            <li>{{ product.nome }} </li>
+            <li>
+                <a href="/product/{{ product.id }}/">{{ product.nome }}</a>
+                — {{ product.marca }} — {{ product.preço }}
+            </li>
         {% empty %}
             <li>Estamos sem estoque.</li>
         {% endfor %}
