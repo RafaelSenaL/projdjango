@@ -7,7 +7,7 @@
 <p><strong>Marca:</strong> {{ product.marca }}</p>
 <p><strong>Preço:</strong> {{ product.preço }} $</p>
 
-<a href="/product/{{ product.id }}/edit/">Editar</a> |
- <a href="/product/{{ product.id }}/delete/">Apagar</a> |
-<a href="/">Voltar</a>
+<a href="{% url 'edit' id=product.id %}">Editar</a> |
+<a href="{% url 'delete' id=product.id %}">Deletar</a> |
+<a href="{% url 'index' %}">Voltar</a>
 {% endblock %}

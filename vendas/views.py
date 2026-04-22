@@ -1,6 +1,7 @@
 #views
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .models import Product
 from .forms import ProductForm
 
@@ -15,6 +16,7 @@ def index(request):
 def contacts(request):
     return render(request, 'vendas/contacts.html')
 
+@login_required
 def new(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)
@@ -29,6 +31,7 @@ def details(request, id):
     product = get_object_or_404(Product, id=id)
     return render(request, 'vendas/details.html', {'product': product})
 
+@login_required
 def edit(request, id):
     product = get_object_or_404(Product, id=id)
     if request.method == 'POST':
@@ -40,6 +43,7 @@ def edit(request, id):
         form = ProductForm(instance=product)
     return render(request, 'vendas/edit.html', {'form': form, 'product': product})
 
+@login_required
 def delete(request, id):
     product = get_object_or_404(Product, id=id)
     if request.method == 'POST':

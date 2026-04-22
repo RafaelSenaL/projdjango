@@ -9,6 +9,6 @@
     <form method="POST">
         {% csrf_token %}
         <button type="submit">Confirmar</button>
-        <a href="/product/{{ product.id }}/">Cancelar</a>
+        <a href="{% url 'details' id=product.id %}">Cancelar</a>
     </form>
 {% endblock %}

@@ -5,9 +5,9 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('contacts/', views.contacts, name='contatos'),
+    path('contacts/', views.contacts, name='contacts'),
     path('new/', views.new, name='new'),
-    path('product/<int:id>/', views.details, name='detalhe'),
-    path('product/<int:id>/edit/', views.edit, name='editar'),
-    path('product/<int:id>/delete/', views.delete, name='deletar'),
+    path('product/<int:id>/', views.details, name='details'),
+    path('product/<int:id>/edit/', views.edit, name='edit'),
+    path('product/<int:id>/delete/', views.delete, name='delete'),
 ]
