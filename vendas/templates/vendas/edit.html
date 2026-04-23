@@ -3,12 +3,12 @@
 {% block titulo %}Editar {{ product.nome }}{% endblock %}
 
 {% block conteudo %}
-    <h1>Editar {{ product.nome }}</h1>
+    <h1>Editar {{ p.nome }}</h1>
 
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Salvar</button>
-       <a href="{% url 'details' id=product.id %}">Cancelar</a>
+       <a href="{% url 'details' id=p.id %}">Cancelar</a>
     </form>
 {% endblock %}

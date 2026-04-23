@@ -5,10 +5,10 @@
 {% block conteudo %}
     <h1>Produtos em Destaque</h1>
     <ul>
-        {% for product in product %}
+        {% for p in produtos %}
             <li>
-                <a href="{% url 'details' id=product.id %}">{{ product.nome }}</a>
-                — {{ product.marca }} — {{ product.preço }}
+                <a href="{% url 'details' id=p.id %}">{{ p.nome }}</a>
+                — {{ p.marca }} — {{ p.preço }}  <p>Anunciante: {{ p.autor.username }}</p>
             </li>
         {% empty %}
             <li>Estamos sem estoque.</li>

@@ -10,21 +10,31 @@
 
 <body>
 
-   <nav>
-    <a href="{% url 'index' %}">Início</a> |
-    <a href="{% url 'contacts' %}">Contato</a> |
-    <a href="{% url 'new' %}">Adicionar</a>
-     {% if user.is_authenticated %}
+    <nav>
+        <a href="{% url 'index' %}">Início</a> |
+        <a href="{% url 'contacts' %}">Contato</a> |
+        <a href="{% url 'new' %}">Adicionar</a>
+        {% if user.is_authenticated %}
         Olá, {{ user.username }}! |
         <form method="POST" action="{% url 'logout' %}" style="display: inline;">
             {% csrf_token %}
             <button type="submit">Sair</button>
         </form>
-    {% else %}
-    <a href="{% url 'login' %}">Entrar</a>
-    {% endif %}
-</nav>
+        {% else %}
+        <a href="{% url 'login' %}">Entrar</a>
+        {% endif %}
+    </nav>
     <hr>
+
+
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
 
     <main>
         {% block conteudo %}{% endblock %}
