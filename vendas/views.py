@@ -2,10 +2,25 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Product
 from .forms import ProductForm
+
+def cadastro(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save() 
+            login(request, user) 
+            messages.success(request, 'Conta criada com sucesso!')
+            return redirect('index') 
+    else:
+        form = UserCreationForm()
+    
+    return render(request, 'vendas/cadastro.html', {'form': form})
 
 def index(request):
     lista_produtos = Product.objects.all()

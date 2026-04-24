@@ -7,8 +7,8 @@
     <ul>
         {% for p in produtos %}
             <li>
-                <a href="{% url 'details' id=p.id %}">{{ p.nome }}</a>
-                — {{ p.marca }} — {{ p.preço }}  <p>Anunciante: {{ p.autor.username }}</p>
+               <p> <a href="{% url 'details' id=p.id %}">{{ p.nome }}</a>
+                — {{ p.marca }} — {{ p.preço }} R$ </p>  <p>Anunciante: {{ p.autor.username }}</p>
             </li>
         {% empty %}
             <li>Estamos sem estoque.</li>
