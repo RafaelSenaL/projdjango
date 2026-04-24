@@ -1,0 +1,20 @@
+{% extends 'vendas/base.html' %}
+
+{% block conteudo %}
+<div>
+    <h2>{{ product.nome }}</h2>
+    <p>marca: {{ product.marca }}</p>
+    <p>preço: {{ product.preço }}</p>
+    <p>Anunciante: {{ product.autor.username }}</p>
+
+    {% if user.is_staff or product.autor == user %}
+        <hr>
+        <div class="acoes-admin">
+            <a href="{% url 'edit' id=product.id %}">Editar este anúncio</a> |
+            <a href="{% url 'delete' id=product.id %}" style="color: red;">Deletar anúncio</a>
+        </div>
+    {% endif %}
+</div>
+
+<a href="{% url 'index' %}">Voltar</a>
+{% endblock %}
