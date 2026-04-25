@@ -11,3 +11,12 @@ class Product(models.Model):
 
     def __str__(self):
         return self.nome
+    
+class CarrinhoItem(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    produto = models.ForeignKey('Product', on_delete=models.CASCADE) # 'Produto' é o nome do seu outro model
+    quantidade = models.PositiveIntegerField(default=1)
+    data_adicionado = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.quantidade}x {self.produto.nome}"

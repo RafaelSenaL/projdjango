@@ -1,5 +1,5 @@
 {% extends 'vendas/base.html' %}
-{% load widget_tweaks %}
+
 
 {% block titulo %}Editar {{ product.nome }}{% endblock %}
 
@@ -10,6 +10,6 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Salvar</button>
-       <a href="{% url 'details' id=p.id %}">Cancelar</a>
+       <a href="{% url 'details' id=product.id %}">Cancelar</a>
     </form>
 {% endblock %}

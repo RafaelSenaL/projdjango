@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Product
+from .models import Product, CarrinhoItem
 from .forms import ProductForm
 
 def cadastro(request):
@@ -81,3 +81,28 @@ def delete(request, id):
         messages.success(request, 'produto apagado com sucesso')
         return redirect('index')
     return render(request, 'vendas/delete.html', {'product': p})
+
+@login_required
+def cart(request):
+    itens = CarrinhoItem.objects.filter(usuario=request.user)
+    total = sum(item.produto.preço * item.quantidade for item in itens)
+    
+    return render(request, 'vendas/cart.html', {
+        'itens_carrinho': itens,
+        'total_geral': total
+    })
+@login_required 
+def adicionar_ao_carrinho(request, id):
+    produto = get_object_or_404(Product, id=id)
+    
+    
+    item, criado = CarrinhoItem.objects.get_or_create(
+        usuario=request.user,
+        produto=produto
+    )
+
+    if not criado:
+        item.quantidade += 1
+        item.save()
+
+    return redirect('cart')
