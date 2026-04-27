@@ -1,11 +1,11 @@
 {% extends 'vendas/base.html' %}
 {% load widget_tweaks %}
 
-{% block titulo %}Adicionar Produto{% endblock %}
+{% block titulo %}Editar Produto{% endblock %}
 
 {% block conteudo %}
 <div class="container my-5">
-    <h2 class="text-center mb-4">Adicionar Produto</h2>
+    <h2 class="text-center mb-4">Editar Produto: {{ form.instance.nome }}</h2>
 
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
@@ -17,15 +17,23 @@
                     <label class="form-label fw-bold">{{ field.label }}</label>
 
                     {% if field.name == 'imagem' %}
-
-                    <div class="input-group">
-                        {% render_field field class="form-control" required="required" %}
+                    <div class="mb-2">
+                        {% if form.instance.imagem %}
+                            <small class="text-muted d-block mb-1">Imagem atual:</small>
+                            <img src="{{ form.instance.imagem.url }}" alt="Atual" class="img-thumbnail mb-2" style="max-height: 100px;">
+                        {% endif %}
+                        
+                        <div class="input-group">
+                            {# Removido o required aqui para permitir editar sem trocar a foto #}
+                            {% render_field field class="form-control" %}
+                        </div>
                     </div>
                     {% if field.help_text %}
                     <small class="text-muted">{{ field.help_text }}</small>
                     {% endif %}
+                    
                     {% else %}
-
+                    {# Outros campos como Nome, Preço, etc #}
                     {% render_field field class="form-control" placeholder=field.label %}
                     {% endif %}
 
@@ -39,12 +47,11 @@
 
                 <div class="d-grid gap-2 mt-4">
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-lg"></i> Salvar Produto
+                        <i class="bi bi-save"></i> Atualizar Alterações
                     </button>
-                    <a href="{% url 'index' %}" class="btn btn-outline-secondary">Cancelar</a>
+                    <a href="{% url 'details' id=form.instance.id %}" class="btn btn-outline-secondary">Cancelar</a>
                 </div>
             </form>
-
         </div>
     </div>
 </div>

@@ -1,26 +1,160 @@
 #views
 
-from django.shortcuts import render, redirect
-from .models import Product
-from .forms import ProductForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Product, CarrinhoItem
+from .forms import ProductForm, ContactForm
+from django.db.models import Q
+
+def cadastro(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save() 
+            login(request, user) 
+            messages.success(request, 'Conta criada com sucesso!')
+            return redirect('index') 
+    else:
+        form = UserCreationForm()
+    
+    return render(request, 'vendas/cadastro.html', {'form': form})
 
 def index(request):
-    product = Product.objects.all()
+   
+    produtos = Product.objects.all()
+    
+  
+    termo_busca = request.GET.get('busca')
 
+   
+    if termo_busca:
+        produtos = produtos.filter(
+            Q(nome__icontains=termo_busca) | 
+            Q(marca__icontains=termo_busca)
+        )
+
+   
     contexto = {
-        'product': product,
+        'produtos': produtos,
+        'valor_busca': termo_busca, 
     }
+    
     return render(request, 'vendas/index.html', contexto)
 
 def contacts(request):
-    return render(request, 'vendas/contacts.html')
-
-def new(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST)
+        form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('index')
     else:
+        form = ContactForm()
+
+    return render(request, 'vendas/contacts.html', {'form': form})
+
+@login_required
+def new(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.autor = request.user 
+            product.save() 
+            
+            messages.success(request, 'Produto adicionado com sucesso')
+            return redirect('index')
+    else:
         form = ProductForm()
     return render(request, 'vendas/new.html', {'form': form})
+
+def details(request, id):
+    p = get_object_or_404(Product, id=id)
+    return render(request, 'vendas/details.html', {'product': p})
+
+@login_required
+def edit(request, id):
+    p = get_object_or_404(Product, id=id)
+
+    if not (request.user.is_staff or p.autor == request.user):
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=p)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'produto editado com sucesso')
+            return redirect('details', id=id) 
+    else:
+        form = ProductForm(instance=p)
+   
+    return render(request, 'vendas/edit.html', {'form': form, 'product': p})
+
+@login_required
+def delete(request, id):
+    p = get_object_or_404(Product, id=id)
+
+    if not (request.user.is_staff or p.autor == request.user):
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        p.delete()
+        messages.success(request, 'produto apagado com sucesso')
+        return redirect('index')
+    return render(request, 'vendas/delete.html', {'product': p})
+
+@login_required
+def cart(request):
+    itens = CarrinhoItem.objects.filter(usuario=request.user)
+    total = sum(item.produto.preço * item.quantidade for item in itens)
+    
+    return render(request, 'vendas/cart.html', {
+        'itens_carrinho': itens,
+        'total_geral': total
+    })
+@login_required 
+def adicionar_ao_carrinho(request, id):
+    produto = get_object_or_404(Product, id=id)
+    
+    
+    item, criado = CarrinhoItem.objects.get_or_create(
+        usuario=request.user,
+        produto=produto
+    )
+
+    if not criado:
+        item.quantidade += 1
+        item.save()
+
+    return redirect('cart')
+
+def remover_carrinho(item_id):
+    CarrinhoItem.objects.filter(id=item_id).delete()
+    
+    return redirect('cart')
+
+@login_required
+def profile(request, username= None):
+   
+    if username is None:
+       
+        perfil_dono = request.user
+    else:
+       
+        perfil_dono = get_object_or_404(User, username=username)
+    
+    anuncios = Product.objects.filter(autor=perfil_dono)
+    
+    return render(request, 'vendas/profile.html', {
+        'perfil_dono': perfil_dono,
+        'anuncios': anuncios
+    })
+@login_required
+def profile_self(request):
+    
+    return profile(request, username=request.user.username)
+  
