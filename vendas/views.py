@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Product, CarrinhoItem
 from .forms import ProductForm
+from django.db.models import Q
 
 def cadastro(request):
     if request.method == 'POST':
@@ -23,10 +24,25 @@ def cadastro(request):
     return render(request, 'vendas/cadastro.html', {'form': form})
 
 def index(request):
-    lista_produtos = Product.objects.all()
+   
+    produtos = Product.objects.all()
+    
+  
+    termo_busca = request.GET.get('busca')
+
+   
+    if termo_busca:
+        produtos = produtos.filter(
+            Q(nome__icontains=termo_busca) | 
+            Q(marca__icontains=termo_busca)
+        )
+
+   
     contexto = {
-        'produtos': lista_produtos,
+        'produtos': produtos,
+        'valor_busca': termo_busca, 
     }
+    
     return render(request, 'vendas/index.html', contexto)
 
 def contacts(request):
@@ -35,7 +51,7 @@ def contacts(request):
 @login_required
 def new(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
             product.autor = request.user 
@@ -59,7 +75,7 @@ def edit(request, id):
         raise PermissionDenied
 
     if request.method == 'POST':
-        form = ProductForm(request.POST, instance=p)
+        form = ProductForm(request.POST, request.FILES, instance=p)
         if form.is_valid():
             form.save()
             messages.success(request, 'produto editado com sucesso')
@@ -106,3 +122,12 @@ def adicionar_ao_carrinho(request, id):
         item.save()
 
     return redirect('cart')
+
+def remover_carrinho(request, item_id):
+    CarrinhoItem.objects.filter(id=item_id).delete()
+    
+    return redirect('cart')
+
+@login_required
+def profile(request):
+    return render(request, 'vendas/profile.html')

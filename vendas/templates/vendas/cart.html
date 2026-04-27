@@ -16,7 +16,12 @@
                     <div class="text-end">
                         <span class="fw-bold text-primary">R$ {{ item.produto.preço }}</span>
                         <br>
-                        <small><a href="#" class="text-danger text-decoration-none">Remover</a></small>
+                        <small>
+                            <a href="{% url 'remover_carrinho' item.id %}" class="text-danger text-decoration-none"
+                                onclick="return confirm('Tem certeza que deseja remover este produto?')">
+                                Remover
+                            </a>
+                        </small>
                     </div>
                 </div>
             </div>

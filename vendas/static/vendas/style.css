@@ -1,5 +1,53 @@
-.bebas-neue-regular {
-  font-family: "Bebas Neue", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+.nav-segunda a{
+  color: white;
+  text-decoration: none;
+  padding: 3px 10px;
+  transition: all 0.3 ease;
+}
+
+.nav-segunda a:hover {
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+}
+
+.nav-segunda .btn-link{
+  color: white;
+  text-decoration: none;
+  padding: 3px 10px;
+  transition: all 0.3 ease;
+}
+
+.nav-segunda .btn-link:hover {
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+}
+
+.card-produto-img {
+    width: 100%;
+    /* Altura menor no celular, maior no PC */
+    height: 150px; 
+    object-fit: cover;
+}
+
+/* Media Query: Quando a tela for maior que 768px (PC) */
+@media (min-width: 768px) {
+    .card-produto-img {
+        height: 250px; /* Altura maior para telas grandes */
+    }
+}
+
+footer a {
+    text-decoration: none;
+    color: inherit;
+}
+
+footer a:hover{
+  color:blue
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%; /* Diminui a largura da zona de clique (padrão é 15%) */
 }

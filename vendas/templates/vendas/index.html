@@ -3,15 +3,69 @@
 {% block titulo %}Início{% endblock %}
 
 {% block conteudo %}
-    <h1>Produtos em Destaque</h1>
-    <ul>
-        {% for p in produtos %}
-            <li>
-               <p> <a href="{% url 'details' id=p.id %}">{{ p.nome }}</a>
-                — {{ p.marca }} — {{ p.preço }} R$ </p>  <p>Anunciante: {{ p.autor.username }}</p>
-            </li>
-        {% empty %}
-            <li>Estamos sem estoque.</li>
-        {% endfor %}
-    </ul>
+<div id="meuCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        
+        <div class="carousel-item active">
+            <div class="p-5 mb-4 bg-dark text-white rounded-3">
+                <div class="container-fluid py-5">
+                    <h1 class="display-5 fw-bold">Ofertas do Mês</h1>
+                    <p class="col-md-8 fs-4">Confira os produtos com até 50% de desconto na nossa loja.</p>
+                    <button class="btn btn-primary btn-lg" type="button">Ver Ofertas</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <div class="p-5 mb-4 bg-primary text-white rounded-3">
+                <div class="container-fluid py-5">
+                    <h1 class="display-5 fw-bold">Ei Você!</h1>
+                    <p class="col-md-8 fs-4">Anuncie seus produtos aqui!</p>
+                    <a href="{% url 'new' %}" class="btn btn-light btn-lg">Anunciar Agora</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <button class="carousel-control-prev" type="button" data-bs-target="#meuCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#meuCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<h1 class="my-4 text-center bebas-neue-regular">Produtos em Destaque</h1>
+
+<div class="row"> 
+    {% for p in produtos %}
+    <div class="col-6 col-md-4 col-lg-3 mb-4"> 
+        <div class="card shadow-sm h-100">
+            {% if p.imagem %}
+                <img src="{{ p.imagem.url }}" class="card-img-top card-produto-img" alt="{{ p.nome }}">
+            {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                    <small class="text-muted">Sem imagem</small>
+                </div>
+            {% endif %}
+            
+            <div class="card-body p-2 d-flex flex-column justify-content-between"> 
+                <div>
+                    <h6 class="card-title text-truncate" title="{{ p.nome }}">{{ p.nome }}</h6>
+                    <p class="card-text text-muted small">{{ p.marca }}</p>
+                </div>
+                <div class="mt-2">
+                    <p class="card-text mb-1"><strong>R$ {{ p.preço }}</strong></p>
+                    <a href="{% url 'details' id=p.id %}" class="btn btn-sm btn-outline-primary w-100">Ver detalhes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center">
+        <p class="alert alert-info">Estamos sem estoque no momento.</p>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}
