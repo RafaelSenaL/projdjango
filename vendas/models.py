@@ -9,7 +9,8 @@ class Product(models.Model):
     autor = models.ForeignKey(User, on_delete=models.CASCADE, default= 1)
     marca = models.CharField(max_length=50, default='Genérica')
     preço = models.FloatField(default=0)
-    imagem = models.ImageField(upload_to='produtos/', null=True, blank=True)
+    descricao = models.TextField(blank=True, null=True)
+    imagem = models.ImageField(upload_to='produtos/')
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -30,3 +31,13 @@ class CarrinhoItem(models.Model):
 
     def __str__(self):
         return f"{self.quantidade}x {self.produto.nome}"
+    
+class Contact(models.Model):
+    nome = models.CharField(max_length=100)
+    email = models.EmailField()
+    assunto = models.CharField(max_length=200)
+    mensagem = models.TextField()
+    data_envio = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.nome} - {self.assunto}"

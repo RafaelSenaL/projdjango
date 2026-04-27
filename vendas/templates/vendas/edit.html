@@ -1,15 +1,58 @@
 {% extends 'vendas/base.html' %}
+{% load widget_tweaks %}
 
-
-{% block titulo %}Editar {{ product.nome }}{% endblock %}
+{% block titulo %}Editar Produto{% endblock %}
 
 {% block conteudo %}
-    <h2>Editar {{ p.nome }}</h2>
+<div class="container my-5">
+    <h2 class="text-center mb-4">Editar Produto: {{ form.instance.nome }}</h2>
 
-    <form method="POST"  enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar</button>
-       <a href="{% url 'details' id=product.id %}">Cancelar</a>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <form method="POST" enctype="multipart/form-data" class="shadow p-4 bg-light rounded">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">{{ field.label }}</label>
+
+                    {% if field.name == 'imagem' %}
+                    <div class="mb-2">
+                        {% if form.instance.imagem %}
+                            <small class="text-muted d-block mb-1">Imagem atual:</small>
+                            <img src="{{ form.instance.imagem.url }}" alt="Atual" class="img-thumbnail mb-2" style="max-height: 100px;">
+                        {% endif %}
+                        
+                        <div class="input-group">
+                            {# Removido o required aqui para permitir editar sem trocar a foto #}
+                            {% render_field field class="form-control" %}
+                        </div>
+                    </div>
+                    {% if field.help_text %}
+                    <small class="text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    
+                    {% else %}
+                    {# Outros campos como Nome, Preço, etc #}
+                    {% render_field field class="form-control" placeholder=field.label %}
+                    {% endif %}
+
+                    {% if field.errors %}
+                    <div class="text-danger small">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Atualizar Alterações
+                    </button>
+                    <a href="{% url 'details' id=form.instance.id %}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

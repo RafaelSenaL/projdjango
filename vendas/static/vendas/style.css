@@ -26,15 +26,15 @@
 
 .card-produto-img {
     width: 100%;
-    /* Altura menor no celular, maior no PC */
+  
     height: 150px; 
     object-fit: cover;
 }
 
-/* Media Query: Quando a tela for maior que 768px (PC) */
+
 @media (min-width: 768px) {
     .card-produto-img {
-        height: 250px; /* Altura maior para telas grandes */
+        height: 250px;
     }
 }
 
@@ -49,5 +49,6 @@ footer a:hover{
 
 .carousel-control-prev,
 .carousel-control-next {
-    width: 5%; /* Diminui a largura da zona de clique (padrão é 15%) */
+    width: 5%;
 }
+

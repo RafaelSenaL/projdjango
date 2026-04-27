@@ -3,12 +3,39 @@
 {% block titulo %}Deletar {{ product.nome }}{% endblock %}
 
 {% block conteudo %}
-    <h2>Deletar {{ p.nome }}?</h2>
-    <p>Essa ação não pode ser desfeita!</p>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white text-center">
+                    <h4 class="mb-0 py-2"><i class="bi bi-exclamation-triangle"></i> Atenção!</h4>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <h2 class="h4 mb-3">Deseja realmente excluir este anúncio?</h2>
+                    
+                    <div class="alert alert-warning">
+                        <strong class="d-block mb-1">{{ product.nome }}</strong>
+                        <p class="small mb-0 text-muted">Marca: {{ product.marca }} | Preço: R$ {{ product.preço }}</p>
+                    </div>
 
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit">Confirmar</button>
-        <a href="{% url 'details' id=product.id %}">Cancelar</a>
-    </form>
+                    <p class="text-danger fw-bold mb-4">
+                        <i class="bi bi-info-circle"></i> Essa ação é irreversível e o anúncio será removido permanentemente.
+                    </p>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="bi bi-trash"></i> Sim, Excluir Agora
+                            </button>
+                            <a href="{% url 'details' id=product.id %}" class="btn btn-outline-secondary">
+                                Não, Voltar aos Detalhes
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -4,11 +4,48 @@
 {% block titulo %}Adicionar Produto{% endblock %}
 
 {% block conteudo %}
-    <h2>Adicionar Produto</h2>
+<div class="container my-5">
+    <h2 class="text-center mb-4">Adicionar Produto</h2>
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar</button>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <form method="POST" enctype="multipart/form-data" class="shadow p-4 bg-light rounded">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">{{ field.label }}</label>
+
+                    {% if field.name == 'imagem' %}
+
+                    <div class="input-group">
+                        {% render_field field class="form-control" required="required" %}
+                    </div>
+                    {% if field.help_text %}
+                    <small class="text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% else %}
+
+                    {% render_field field class="form-control" placeholder=field.label %}
+                    {% endif %}
+
+                    {% if field.errors %}
+                    <div class="text-danger small">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Salvar Produto
+                    </button>
+                    <a href="{% url 'index' %}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

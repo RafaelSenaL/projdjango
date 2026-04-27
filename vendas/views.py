@@ -3,11 +3,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Product, CarrinhoItem
-from .forms import ProductForm
+from .forms import ProductForm, ContactForm
 from django.db.models import Q
 
 def cadastro(request):
@@ -46,7 +47,15 @@ def index(request):
     return render(request, 'vendas/index.html', contexto)
 
 def contacts(request):
-    return render(request, 'vendas/contacts.html')
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = ContactForm()
+
+    return render(request, 'vendas/contacts.html', {'form': form})
 
 @login_required
 def new(request):
@@ -123,11 +132,29 @@ def adicionar_ao_carrinho(request, id):
 
     return redirect('cart')
 
-def remover_carrinho(request, item_id):
+def remover_carrinho(item_id):
     CarrinhoItem.objects.filter(id=item_id).delete()
     
     return redirect('cart')
 
 @login_required
-def profile(request):
-    return render(request, 'vendas/profile.html')
+def profile(request, username= None):
+   
+    if username is None:
+       
+        perfil_dono = request.user
+    else:
+       
+        perfil_dono = get_object_or_404(User, username=username)
+    
+    anuncios = Product.objects.filter(autor=perfil_dono)
+    
+    return render(request, 'vendas/profile.html', {
+        'perfil_dono': perfil_dono,
+        'anuncios': anuncios
+    })
+@login_required
+def profile_self(request):
+    
+    return profile(request, username=request.user.username)
+  

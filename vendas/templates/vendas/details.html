@@ -1,37 +1,48 @@
 {% extends 'vendas/base.html' %}
 
+{% block titulo %}{{ product.nome }}{% endblock %}
+
 {% block conteudo %}
 <div class="container my-5">
     <div class="row">
         <div class="col-md-6">
             <h2 class="bebas-neue-regular h1">{{ product.nome }}</h2>
+            <img src="{{ product.imagem.url }}" class="card-img-top card-produto-img" alt="{{ product.nome }}">
             <p class="text-muted">Marca: <strong>{{ product.marca }}</strong></p>
             <h3 class="text-primary mb-3">R$ {{ product.preço }}</h3>
             <p>Anunciante: <span class="badge bg-secondary">{{ product.autor.username }}</span></p>
             {% if product.autor != user %}
-    <div class="d-grid gap-2 d-md-block mt-4">
-        <form action="{% url 'add_cart' product.id %}" method="POST" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary btn-lg px-5">
-                <i class="bi bi-cart-plus"></i> Adicionar ao Carrinho
-            </button>
-        </form>
-          <button type="submit" class="btn btn-primary btn-lg px-5">
-            Comprar Agora
-            </button>
-        
-    </div>
-{% endif %}
+            <div class="d-grid gap-2 d-md-block mt-4">
+                <form action="{% url 'add_cart' product.id %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="bi bi-cart-plus"></i> Adicionar ao Carrinho
+                    </button>
+                </form>
+                <button type="submit" class="btn btn-primary btn-lg px-5">
+                    Comprar Agora
+                </button>
+
+            </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <h5 class="fw-bold">Descrição do Produto</h5>
+                <div class="text-secondary" style="text-align: justify;">
+                    {{ product.descricao|linebreaks }}
+                </div>
+            </div>
 
             {% if user.is_staff or product.autor == user %}
-                <hr class="my-4">
-                <div class="acoes-admin p-3 bg-light rounded">
-                    <h6 class="text-uppercase text-muted small fw-bold">Gerenciamento</h6>
-                    <a href="{% url 'edit' id=product.id %}" class="btn btn-sm btn-outline-dark">Editar anúncio</a>
-                    <a href="{% url 'delete' id=product.id %}" class="btn btn-sm btn-outline-danger ms-2">Deletar anúncio</a>
-                </div>
+            <hr class="my-4">
+            <div class="acoes-admin p-3 bg-light rounded">
+                <h6 class="text-uppercase text-muted small fw-bold">Gerenciamento</h6>
+                <a href="{% url 'edit' id=product.id %}" class="btn btn-sm btn-outline-dark">Editar anúncio</a>
+                <a href="{% url 'delete' id=product.id %}" class="btn btn-sm btn-outline-danger ms-2">Deletar
+                    anúncio</a>
+            </div>
             {% endif %}
-            
+
             <div class="mt-4">
                 <a href="{% url 'index' %}" class="text-decoration-none">
                     <i class="bi bi-arrow-left"></i> Voltar para a loja
