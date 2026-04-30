@@ -3,9 +3,9 @@
 {% block titulo %}Início{% endblock %}
 
 {% block conteudo %}
+
 <div id="meuCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
-        
         <div class="carousel-item active">
             <div class="p-5 mb-4 bg-dark text-white rounded-bottom-3">
                 <div class="container-fluid py-5">
@@ -25,7 +25,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     
     <button class="carousel-control-prev" type="button" data-bs-target="#meuCarousel" data-bs-slide="prev">
@@ -41,30 +40,36 @@
 <div class="row"> 
     {% for p in produtos %}
     <div class="col-6 col-md-4 col-lg-3 mb-4"> 
-        <div class="card shadow-sm h-100">
-            {% if p.imagem %}
-                <img src="{{ p.imagem.url }}" class="card-img-top card-produto-img" alt="{{ p.nome }}">
-            {% else %}
-                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
-                    <small class="text-muted">Sem imagem</small>
-                </div>
-            {% endif %}
+        <div class="card shadow-sm h-100 card-custom">
             
-            <div class="card-body p-2 d-flex flex-column justify-content-between"> 
-                <div>
-                    <h6 class="card-title text-truncate" title="{{ p.nome }}">{{ p.nome }}</h6>
-                    <p class="card-text text-muted small">{{ p.marca }}</p>
+           
+            <div class="container-img-produto">
+                {% if p.imagem %}
+                    <img src="{{ p.imagem.url }}" class="card-produto-img" alt="{{ p.nome }}">
+                {% else %}
+                    <div class="text-center">
+                        <i class="bi bi-image text-muted" style="font-size: 2rem;"></i><br>
+                        <small class="text-muted">Sem imagem</small>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="card-body p-3 d-flex flex-column"> 
+                <div class="mb-2">
+                    <p class="card-text text-muted small mb-1">{{ p.marca }}</p>
+                    <h6 class="card-title titulo-produto" title="{{ p.nome }}">{{ p.nome }}</h6>
                 </div>
-                <div class="mt-2">
-                    <p class="card-text mb-1"><strong>R$ {{ p.preço }}</strong></p>
-                    <a href="{% url 'details' id=p.id %}" class="btn btn-sm btn-outline-primary w-100">Ver detalhes</a>
+                
+                <div class="mt-auto">
+                    <p class="card-text mb-2 preco-produto">R$ {{ p.preço }}</p>
+                    <a href="{% url 'details' id=p.id %}" class="btn btn-sm btn-primary w-100">Ver detalhes</a>
                 </div>
             </div>
         </div>
     </div>
     {% empty %}
     <div class="col-12 text-center">
-        <p class="alert alert-info">Estamos sem estoque no momento.</p>
+        <div class="alert alert-info">Estamos sem estoque no momento.</div>
     </div>
     {% endfor %}
 </div>
